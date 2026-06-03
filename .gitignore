@@ -1,0 +1,13 @@
+# Flutter
+.dart_tool/
+.packages
+build/
+*.iml
+.idea/
+.vscode/
+*.lock
+
+# Misc
+.tools/
+*.log
+.DS_Store
