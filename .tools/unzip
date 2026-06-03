@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+"""unzip replacement using Python's zipfile module.
+Handles: unzip [-o] [-q] archive.zip [-d outdir] [files...]
+"""
+import sys, zipfile, os
+
+def main():
+    args = sys.argv[1:]
+    outdir = None
+    archive = None
+    members = []
+    i = 0
+    while i < len(args):
+        a = args[i]
+        if a == '-o' or a == '-q':
+            i += 1
+        elif a == '-d':
+            outdir = args[i+1]
+            i += 2
+        elif a.startswith('-'):
+            i += 1
+        elif archive is None:
+            archive = a
+            i += 1
+        else:
+            members.append(a)
+            i += 1
+
+    if archive is None:
+        print("Usage: unzip [-o] [-q] archive.zip [-d outdir] [files...]")
+        sys.exit(1)
+
+    with zipfile.ZipFile(archive) as z:
+        if members:
+            for m in members:
+                z.extract(m, path=outdir or '.')
+        else:
+            z.extractall(path=outdir or '.')
+            # List files like real unzip
+            for info in z.infolist():
+                print(f"  inflating: {info.filename}")
+
+if __name__ == '__main__':
+    main()

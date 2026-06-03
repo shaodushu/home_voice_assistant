@@ -1,0 +1,48 @@
+# Docker Compose for Home Voice Assistant dependencies
+
+services:
+  # Ollama - Local LLM
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  # Piper - Local TTS
+  piper:
+    image: rhasspy/piper-http:latest
+    container_name: piper
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./piper_voices:/usr/share/piper/voices
+    restart: unless-stopped
+
+  # whisper-asr-webservice - Local STT (alternative)
+  whisper:
+    image: onerahmet/openai-whisper-asr-webservice:latest
+    container_name: whisper
+    ports:
+      - "9000:9000"
+    command: ["--model", "tiny"]
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+volumes:
+  ollama_data:
