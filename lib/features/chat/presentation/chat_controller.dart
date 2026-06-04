@@ -48,6 +48,8 @@ class ChatUIState {
     return HAEntity(
       entityId: '$domain.default',
       state: '',
+      lastChanged: DateTime.now(),
+      lastUpdated: DateTime.now(),
     );
   }
 }

@@ -31,11 +31,35 @@ class _HomeVoiceAssistantAppState extends ConsumerState<HomeVoiceAssistantApp> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    return MaterialApp(
+      title: '智能语音助手',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorSchemeSeed: Colors.indigo,
+        useMaterial3: true,
+        brightness: Brightness.light,
+      ),
+      darkTheme: ThemeData(
+        colorSchemeSeed: Colors.indigo,
+        useMaterial3: true,
+        brightness: Brightness.dark,
+      ),
+      home: _MainScaffold(currentIndex: _currentIndex, onTap: (i) => setState(() => _currentIndex = i)),
+    );
+  }
+}
 
+class _MainScaffold extends ConsumerWidget {
+  final int currentIndex;
+  final ValueChanged<int> onTap;
+
+  const _MainScaffold({required this.currentIndex, required this.onTap});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: IndexedStack(
-        index: _currentIndex,
+        index: currentIndex,
         children: const [
           _HomeTab(),
           _DevicesTab(),
@@ -43,8 +67,8 @@ class _HomeVoiceAssistantAppState extends ConsumerState<HomeVoiceAssistantApp> {
         ],
       ),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (i) => setState(() => _currentIndex = i),
+        selectedIndex: currentIndex,
+        onDestinationSelected: onTap,
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
@@ -74,6 +98,7 @@ class _HomeTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final haState = ref.watch(haControllerProvider);
     final voiceState = ref.watch(voiceControllerProvider);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(

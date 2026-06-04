@@ -3,12 +3,13 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/io.dart';
 
 /// Home Assistant WebSocket client wrapping the HA WebSocket API
 class HAWebSocketClient {
   WebSocketChannel? _channel;
   int _messageId = 1;
-  final Map<int, Completer<Map<String, dynamic>>> _pendingRequests = {};
+  final Map<int, Completer<dynamic>> _pendingRequests = {};
   final StreamController<HAEvent> _eventController =
       StreamController<HAEvent>.broadcast();
 
@@ -37,13 +38,12 @@ class HAWebSocketClient {
       final wsUrl = _buildWsUrl(baseUrl);
       debugPrint('Connecting to HA WebSocket: $wsUrl');
 
-      final ws = WebSocketChannel.connect(
+      final ws = IOWebSocketChannel.connect(
         Uri.parse(wsUrl),
-        headers: {
+        headers: <String, dynamic>{
           'Authorization': 'Bearer $token',
         },
       );
-
       _channel = ws;
       _startPing();
 
@@ -128,7 +128,8 @@ class HAWebSocketClient {
       data['target'] = {'entity_id': entityId};
     }
 
-    return _sendCommand(data);
+    final result = await _sendCommand(data);
+    return (result as Map<String, dynamic>?) ?? {};
   }
 
   /// Get all states
@@ -139,10 +140,11 @@ class HAWebSocketClient {
 
   /// Get specific entity state
   Future<Map<String, dynamic>> getState(String entityId) async {
-    return _sendCommand({
+    final result = await _sendCommand({
       'type': 'get_states',
       'entity_id': entityId,
     });
+    return (result as Map<String, dynamic>?) ?? {};
   }
 
   /// Get all areas
@@ -158,7 +160,8 @@ class HAWebSocketClient {
 
   /// Get services registry
   Future<Map<String, dynamic>> getServices() async {
-    return _sendCommand('get_services');
+    final result = await _sendCommand('get_services');
+    return (result as Map<String, dynamic>?) ?? {};
   }
 
   /// Render a template
@@ -229,7 +232,7 @@ class HAWebSocketClient {
     }
 
     final id = _messageId++;
-    final completer = Completer<Map<String, dynamic>>();
+    final completer = Completer<dynamic>();
     _pendingRequests[id] = completer;
 
     final message = command is String

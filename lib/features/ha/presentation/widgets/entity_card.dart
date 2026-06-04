@@ -68,7 +68,7 @@ class EntityCard extends ConsumerWidget {
         color = isOn ? Colors.lightBlue : theme.colorScheme.onSurfaceVariant;
         break;
       case EntityCategory.cover:
-        icon = isOn ? Icons.blinds_open : Icons.blinds_closed;
+        icon = isOn ? Icons.blinds : Icons.blinds_closed;
         color = isOn ? Colors.green : theme.colorScheme.onSurfaceVariant;
         break;
       case EntityCategory.lock:

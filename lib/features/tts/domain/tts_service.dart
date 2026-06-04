@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/piper_tts.dart';
 import 'tts_state.dart';
 
 /// Provider for TTS service

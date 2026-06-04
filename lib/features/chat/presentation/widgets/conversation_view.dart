@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../chat_controller.dart';
-import '../../chat/domain/chat_message.dart';
+import '../../domain/chat_message.dart';
 
 /// Conversation view showing recent messages
 class ConversationView extends ConsumerWidget {

@@ -39,24 +39,4 @@ abstract class VoiceService {
   void dispose();
 }
 
-/// VAD (Voice Activity Detection) events
-enum VADEventType {
-  speechStarted,
-  speechEnded,
-  silenceTimeout,
-  noise,
-}
-
-class VADEvent {
-  final VADEventType type;
-  final double audioLevel;
-  final double? duration;
-
-  const VADEvent({
-    required this.type,
-    required this.audioLevel,
-    this.duration,
-  });
-}
-
 typedef VoidCallback = void Function();

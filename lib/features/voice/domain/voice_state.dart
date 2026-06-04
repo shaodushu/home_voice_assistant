@@ -49,3 +49,24 @@ class AudioLevel {
     required this.timestamp,
   });
 }
+
+/// VAD event types
+enum VADEventType {
+  speechStarted,
+  speechEnded,
+  silenceTimeout,
+  noise,
+}
+
+/// VAD event model
+class VADEvent {
+  final VADEventType type;
+  final double audioLevel;
+  final double? duration;
+
+  const VADEvent({
+    required this.type,
+    required this.audioLevel,
+    this.duration,
+  });
+}

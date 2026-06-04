@@ -29,7 +29,7 @@ class AudioCaptureService {
     }
 
     // Configure audio session
-    const config = RecordConfig(
+    final config = RecordConfig(
       encoder: AudioEncoder.pcm16bits,
       numChannels: 1,
       sampleRate: sampleRate,
